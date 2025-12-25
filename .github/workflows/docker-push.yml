@@ -8,6 +8,9 @@ on:
 env:
   AWS_REGION: eu-central-1
   FRONTEND_REPO: frontend
+  BUILDX_VERSION: latest
+  BUILDX_IMAGE: ''
+  ECR_REPOSITORY: frontend
 
 jobs:
   build-and-push:
@@ -17,6 +20,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v3
+    
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker
+          #version: ${{ env.BUILDX_VERSION }}
+          #driver-opts: image=${{ env.CONTAINER_NAME }}
+          #buildkitd-flags: --debug  
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -24,12 +40,39 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          run: |
+            # Build a docker container and
+            # push it to ECR so that it can
+            # be deployed to ECS.
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Build and Push Frontend
-        run: |
-          IMAGE_URI="${{ secrets.ECR_FRONTEND_REPO_URI }}:latest"
-          docker build -t $IMAGE_URI ./frontend
-          docker push $IMAGE_URI
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            images: ${{ secrets.ECR_BACKEND_REPO_URI }}/${{ env.BUILDX_IMAGE }},enable=true
+          tags: |
+            type=semver,pattern={{version}},value=${{ env.BUILDX_VERSION }}
+
+      - name: 🐳 Docker Build and Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          platforms: linux/amd64,linux/arm64/8
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          #build-args: |
+          #  TARGETPLATFORM=${{ env.TARGETPLATFORM }}
+          #  BUILD_DATE=$(date +%s)
