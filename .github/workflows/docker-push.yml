@@ -9,7 +9,8 @@ env:
   AWS_REGION: eu-central-1
   FRONTEND_REPO: frontend
   BUILDX_VERSION: latest
-  BUILDX_IMAGE: ''
+  BUILDX_IMAGE: frontend
+  IMAGE_TAG: ${{ github.sha }}
   ECR_REPOSITORY: frontend
   ECR_REGISTRY: '907244240513.dkr.ecr.eu-central-1.amazonaws.com'
 
@@ -30,9 +31,6 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           driver: docker
-          #version: ${{ env.BUILDX_VERSION }}
-          #driver-opts: image=${{ env.CONTAINER_NAME }}
-          #buildkitd-flags: --debug  
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -49,11 +47,10 @@ jobs:
         id: build-image
         env:
           #ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG .
-          docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
-          echo "image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+          docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          echo "image=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
 
       - name: Docker meta
         id: meta
