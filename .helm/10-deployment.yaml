@@ -27,7 +27,7 @@ spec:
     spec:
       imagePullSecrets:
       - name: registrysecret
-{{- include "affinity_and_tolerations" . | indent 6 }}
+#{{- include "affinity_and_tolerations" . | indent 6 }}
       volumes:
       - name: nginx-config
         configMap:
@@ -52,14 +52,14 @@ spec:
         livenessProbe:
           failureThreshold: 3
           httpGet:
-            path: /_tech/ngx-status
+            path: /
             port: 80
           initialDelaySeconds: 10
           timeoutSeconds: 5
         readinessProbe:
           failureThreshold: 3
           httpGet:
-            path: /_tech/ngx-status
+            path: /
             port: 80
           initialDelaySeconds: 10
           timeoutSeconds: 5
