@@ -1,6 +1,14 @@
 app:
-  replicas:
-    _default: 1
+  hpa:
+    enabled:
+      _default: true
+    replicas:
+      min:
+        _default: 1
+      max:
+        _default: 3
+    averageValue: #cpu
+      _default: 80
   ingressClass:
     _default: nginx
   url:
@@ -11,13 +19,13 @@ app:
     production:
   whitelist:
     _default:
-      - 0.0.0.0/0
+      - "0.0.0.0/0"
 
 resources:
   app:
     _default:
       requests:
         cpu: 100m
-        memory: 256Mi
+        memory: 128Mi
       limits:
-        memory: 256Mi
+        memory: 128Mi
