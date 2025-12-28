@@ -1,0 +1,4 @@
+apiVersion: v2
+name: website
+type: application   # or remove type completely
+version: 0.1.0
