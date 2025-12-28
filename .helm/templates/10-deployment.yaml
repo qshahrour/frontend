@@ -17,7 +17,7 @@ spec:
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
-  replicas: {{ pluck .Values.werf.env .Values.app.replicas | first | default .Values.app.replicas._default }}
+  replicas: {{ pluck .Values.env .Values.app.replicas | first | default .Values.app.replicas._default }}
   template:
     metadata:
       labels:
@@ -35,7 +35,7 @@ spec:
       containers:
       - name: nginx
         imagePullPolicy: Always
-        image: {{ .Values.werf.image.nginx }}
+        image: {{ .Values.image.nginx }}
         command: ["/usr/sbin/nginx", "-g", "daemon off;"]
         ports:
         - containerPort: 80
@@ -64,7 +64,7 @@ spec:
           initialDelaySeconds: 10
           timeoutSeconds: 5
         resources:
-          {{ toYaml (pluck .Values.werf.env .Values.resources.nginx | first | default .Values.resources.nginx._default) | nindent 10 }}
+          {{ toYaml (pluck .Values.env .Values.resources.nginx | first | default .Values.resources.nginx._default) | nindent 10 }}
 
 ---
 apiVersion: v1
