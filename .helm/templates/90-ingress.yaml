@@ -5,7 +5,7 @@ kind: Ingress
 metadata:
   name: {{ .Chart.Name }}
   annotations:
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (pluck .Values.werf.env .Values.app.whitelist | first | default .Values.app.whitelist._default ) }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (pluck .Values.env .Values.app.whitelist | first | default .Values.app.whitelist._default ) }}
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-origin: {{ (pluck .Values.env .Values.app.cors | first | default .Values.app.cors._default) | quote }}
 spec:
