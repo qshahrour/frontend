@@ -64,4 +64,14 @@ jobs:
           build-args: |
             BUILD_DATE=$(date +%s)
           #  TARGETPLATFORM=${{ env.TARGETPLATFORM }}
+  deployment:
+    runs-on: self-hosted
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      
+    
       
