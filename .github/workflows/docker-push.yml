@@ -6,7 +6,7 @@ on:
 env:
   AWS_REGION: eu-central-1
   FRONTEND_REPO: frontend
-  BUILDX_VERSION: latest
+  BUILDX_VERSION: ${{ github.sha }}
   BUILDX_IMAGE: frontend
   IMAGE_TAG: ${{ github.sha }}
   ECR_REPOSITORY: frontend
@@ -44,11 +44,13 @@ jobs:
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         with:
           images: |
-            images: ${{ env.ECR_REGISTRY }}/${{ env.BUILDX_IMAGE }},enable=true
+            images: $ECR_REGISTRY/$ECR_REPOSITORY,enable=true
           tags: |
-            type=semver,pattern={{version}},value=${{ env.BUILDX_VERSION }}
+            type=semver,pattern={{version}},value=$BUILDX_VERSION
 
       - name: 🐳 Docker Build and Push
         uses: docker/build-push-action@v6
@@ -63,7 +65,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD_DATE=$(date +%s)
-          #  TARGETPLATFORM=${{ env.TARGETPLATFORM }}
+
   deployment:
     runs-on: self-hosted
 
@@ -76,7 +78,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: arn:aws:iam::907244240513:role/GitHubActionsEKSDeployRole
+          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/GitHubActionsEKSDeployRole
 
       - name: 🔑 Login to Amazon ECR
         id: login-ecr
