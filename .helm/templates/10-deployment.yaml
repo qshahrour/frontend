@@ -1,1 +1,103 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+  annotations:
+    pod-reloader.deckhouse.io/auto: "true"
+spec:
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 25%
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  replicas: {{ pluck .Values.werf.env .Values.app.replicas | first | default .Values.app.replicas._default }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+      annotations:
+        checksum/cm: {{ include (print $.Template.BasePath "/30-configmap.yaml") . | sha256sum }}
+    spec:
+      imagePullSecrets:
+      - name: registrysecret
+#{{- include "affinity_and_tolerations" . | indent 6 }}
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: {{ .Chart.Name }}-nginx-config
+      containers:
+      - name: nginx
+        imagePullPolicy: Always
+        image: {{ .Values.werf.image.nginx }}
+        command: ["/usr/sbin/nginx", "-g", "daemon off;"]
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "/bin/bash", "-c", "sleep 5; kill -QUIT 1" ]
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        resources:
+          {{ toYaml (pluck .Values.werf.env .Values.resources.nginx | first | default .Values.resources.nginx._default) | nindent 10 }}
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  clusterIP: None
+  selector:
+    app: {{ .Chart.Name }}
+  ports:
+  - name: http
+    port: 80
+
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: {{ .Chart.Name }}
+  updatePolicy:
+    updateMode: "Off"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
