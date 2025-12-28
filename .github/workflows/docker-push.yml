@@ -72,6 +72,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      
-    
-      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::907244240513:role/GitHubActionsEKSDeployRole
+
+      - name: 🔑 Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Helm dependency build
+        run: helm dependency build .helm/
+
+      - name: Helm lint
+        run: helm lint .helm/
+
+      - name: Deploy Helm chart
+        run: |
+          helm upgrade --install website .helm/ \
+          --namespace live \
+          --create-namespace \
+          --values .helm/values.yaml
