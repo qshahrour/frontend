@@ -3,6 +3,10 @@ name: Build and Push Docker Images
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   AWS_REGION: eu-central-1
   FRONTEND_REPO: frontend
