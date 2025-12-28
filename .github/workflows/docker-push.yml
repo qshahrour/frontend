@@ -1,9 +1,7 @@
 name: Build and Push Docker Images
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_dispatch:
 
 env:
   AWS_REGION: eu-central-1
