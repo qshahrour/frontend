@@ -1,0 +1,23 @@
+app:
+  replicas:
+    _default: 1
+  ingressClass:
+    _default: nginx
+  url:
+    dev:
+    production:
+  tlsSecretName:
+    _default:
+    production:
+  whitelist:
+    _default:
+      - 0.0.0.0/0
+
+resources:
+  app:
+    _default:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        memory: 256Mi
