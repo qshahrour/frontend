@@ -9,7 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-origin: {{ (pluck .Values.env .Values.app.cors | first | default .Values.app.cors._default) | quote }}
 spec:
-  ingressClassName: {{ pluck .Values.werf.env .Values.app.ingressClass | first | default .Values.app.ingressClass._default }}
+  ingressClassName: {{ pluck .Values.env .Values.app.ingressClass | first | default .Values.app.ingressClass._default }}
   rules:
   - host: {{ $host }}
     http:
