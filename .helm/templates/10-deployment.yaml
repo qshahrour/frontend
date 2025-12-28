@@ -22,29 +22,21 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}
-      annotations:
-        checksum/cm: {{ include (print $.Template.BasePath "/30-configmap.yaml") . | sha256sum }}
+      #annotations:
+        #checksum/cm: {{ include (print $.Template.BasePath "/30-configmap.yaml") . | sha256sum }}
     spec:
-      imagePullSecrets:
-      - name: registrysecret
-#{{- include "affinity_and_tolerations" . | indent 6 }}
-      volumes:
-      - name: nginx-config
-        configMap:
-          name: {{ .Chart.Name }}-nginx-config
       containers:
-      - name: nginx
-        imagePullPolicy: Always
-        image: {{ .Values.image.nginx }}
-        command: ["/usr/sbin/nginx", "-g", "daemon off;"]
+      - name: app
+        imagePullPolicy: IfNotPresent
+        image: {{ .Values.image.app }}
+        command:
+        - npm
+        args:
+        - start
         ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
-        volumeMounts:
-        - name: nginx-config
-          mountPath: /etc/nginx/nginx.conf
-          subPath: nginx.conf
+          - containerPort: 80
+            name: http
+            protocol: TCP
         lifecycle:
           preStop:
             exec:
