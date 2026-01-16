@@ -14,12 +14,10 @@ app:
   url:
     dev:
     production:
-  tlsSecretName:
-    _default:
-    production:
   whitelist:
     _default:
       - "0.0.0.0/0"
+  image: 907244240513.dkr.ecr.eu-central-1.amazonaws.com/frontend
 
 resources:
   app:
