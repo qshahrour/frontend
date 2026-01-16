@@ -10,7 +10,7 @@ app:
     averageValue: #cpu
       _default: 80
   ingressClass:
-    _default: nginx
+    _default: alb
   url:
     dev: qasem1.balouli.com
   whitelist:
