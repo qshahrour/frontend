@@ -1,5 +1,5 @@
 ---
-{{- $host := (pluck .Values.env .Values.app.url | first | default .Values.app.url._default) }}
+{{- $host := (.Values.app.url }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -10,7 +10,7 @@ metadata:
     #nginx.ingress.kubernetes.io/enable-cors: "true"
     #nginx.ingress.kubernetes.io/cors-allow-origin: {{ (pluck .Values.env .Values.app.cors | first | default .Values.app.cors._default) | quote }}
 spec:
-  ingressClassName: {{ pluck .Values.env .Values.app.ingressClass | first | default .Values.app.ingressClass._default }}
+  ingressClassName: {{ .Values.app.ingressClass }}
   rules:
   - host: {{ $host }}
     http:
@@ -21,8 +21,4 @@ spec:
           service:
             name: {{ .Chart.Name }}
             port:
-              name: http  
- tls:
-   - hosts:
-     - {{ $host }}
-     secretName: {{ pluck .Values.werf.env .Values.app.tlsSecretName | first | default .Values.app.tlsSecretName._default }}
+              name: http 
