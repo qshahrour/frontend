@@ -12,7 +12,7 @@ app:
   ingressClass:
     _default: nginx
   url:
-    dev:
+    dev: qasem1.balouli.com
     production:
   whitelist:
     _default:
