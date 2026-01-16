@@ -62,7 +62,7 @@ kind: Service
 metadata:
   name: {{ .Chart.Name }}
 spec:
-  clusterIP: None
+  type: LoadBalancer
   selector:
     app: {{ .Chart.Name }}
   ports:
