@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_URL } from "./config";
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -8,7 +9,7 @@ function Login({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://pyapi.dev.svc.cluster.local:5000/login", {
+    const res = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
