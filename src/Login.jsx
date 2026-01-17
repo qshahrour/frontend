@@ -8,7 +8,7 @@ function Login({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/login", {
+    const res = await fetch("http://API_URL:5000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -30,7 +30,7 @@ function Login({ onLogin }) {
 
       <input value={email} onChange={e => setEmail(e.target.value)} />
       <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-
+      
       <button>Login</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
