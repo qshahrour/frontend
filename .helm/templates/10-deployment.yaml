@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: app
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           image: {{ .Values.app.image }}
           ports:
             - containerPort: 80
