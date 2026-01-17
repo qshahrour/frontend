@@ -29,6 +29,9 @@ spec:
         - name: app
           imagePullPolicy: Always
           image: {{ .Values.app.image }}
+          env:
+            - name: API_URL
+              value: {{ .Value.app.API_URL }}
           ports:
             - containerPort: 80
               name: http
