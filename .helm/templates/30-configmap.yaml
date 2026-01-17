@@ -37,7 +37,6 @@ data:
       # MIME
       include mime.types;
       default_type application/octet-stream;
-      proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=cache:50m;
 
       map $http_x_forwarded_proto $thescheme {
           default $scheme;
@@ -59,22 +58,10 @@ data:
         listen 80 default_server;
         access_log /dev/stdout combined_plus;
         root /var/www/html;
-
-        {{- if .Values.replace }}
-        location ~* .(png|ico|gif|jpg|jpeg)$ {
-        }
+        
         location / {
-            proxy_pass http://127.0.0.1:8080;
-            proxy_cache_valid 200 302 1y;
-            proxy_cache cache;
-            proxy_cache_key $request_uri;
+            try_files $uri$args $uri$args/ /index.html;
         }
-        {{- else }}
-        location / {
-          index index.html;
-          try_files $uri $uri/ /index.html;
-        }
-        {{- end }}
 
         location ~* "^\/_tech\/ngx-status$" {
           stub_status;
@@ -85,19 +72,4 @@ data:
           deny all;
         }
       }
-      {{- if .Values.replace }}
-      server {
-          listen       127.0.0.1:8080;
-          server_name  orgin;
-          root   /var/www/html;
-          location / {
-              sub_filter_once off;
-              {{- range $key, $value := .Values.replace }}
-              sub_filter '{{ $key }}'  {{ pluck $.Values.env $value | first | default $value._default | squote }};
-              {{- end }}
-              sub_filter_types "*";
-              try_files $uri /index.html;
-          }
-      }
-      {{- end }}
     }
