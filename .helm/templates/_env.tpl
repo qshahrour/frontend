@@ -1,6 +1,6 @@
 {{- define "env" }}
-{{- range .Values.app.env }}
-- name: {{ $name }}
-  value: {{ .value | quote }}
+{{- range $key, $value := .Values.app.env }}
+- name: {{ $key }}
+  value: {{ $value | quote }}
 {{- end }}
 {{- end }}
