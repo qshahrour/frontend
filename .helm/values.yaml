@@ -1,8 +1,8 @@
 app:
   hpa:
     enabled: true
-    minReplicas: 2
-    maxReplicas: 3
+    minReplicas: 1
+    maxReplicas: 1
     averageValue: 80
   ingressClass: nginx
   url: qasem1.balouli.com
