@@ -3,7 +3,7 @@
 - name: {{ $name }}
   valueFrom:
     secretKeyRef:
-      name: {{ $.Chart.Name }}-env
+      name: {{ $.Chart.Name }}
       key: {{ $name }}
 {{- end }}
 {{- end }}
