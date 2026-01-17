@@ -11,7 +11,8 @@ app:
   env: dev
 
   env:
-    API_URL: http://pyapi.dev.svc.cluster.local:5000
+    - name: API_URL
+      value: http://pyapi.dev.svc.cluster.local:5000
 
 resources:
   app:
