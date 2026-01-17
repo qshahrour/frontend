@@ -8,7 +8,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve
-FROM nginx:stable-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+FROM nginx:1.27.1
+COPY --from=build /app/dist /var/www/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
