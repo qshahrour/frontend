@@ -44,7 +44,7 @@ spec:
               exec:
                 command: [ "/bin/bash", "-c", "sleep 5; kill -QUIT 1" ]
           env:
-          {{- include "env" . | nindent 6 }}
+{{- include "env" . | nindent 6 }}
           livenessProbe:
             failureThreshold: 3
             httpGet:
