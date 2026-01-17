@@ -9,7 +9,7 @@ function Login({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("${API_URL}:5000/login", {
+    const res = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -29,10 +29,21 @@ function Login({ onLogin }) {
     <form onSubmit={handleSubmit}>
       <h2>Login</h2>
 
-      <input value={email} onChange={e => setEmail(e.target.value)} />
-      <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-      
-      <button>Login</button>
+      <input
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+
+      <input
+        type="password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        placeholder="Password"
+      />
+
+      <button type="submit">Login</button>
+
       {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
