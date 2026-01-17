@@ -5,7 +5,7 @@ app:
     maxReplicas: 5
     averageValue: 80
   ingressClass:
-    _default: alb
+    _default: nginx
   url: qasem1.balouli.com
   whitelist:
     _default:
