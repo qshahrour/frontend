@@ -7,9 +7,6 @@ RUN npm install
 
 COPY . .
 
-ARG API_URL
-ENV API_URL=pyapi.dev.svc.cluster.local
-
 RUN npm run build
 
 # Stage 2: Serve
