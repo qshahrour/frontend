@@ -15,7 +15,14 @@ spec:
         - path: /
           pathType: Prefix
           backend:
-            service: 
+            service:
               name: {{ .Chart.Name }}
               port:
                 number: 80
+        - path: /login
+          pathType: Prefix
+          backend:
+            service:
+              name: pyapi
+              port:
+                number: 5000
