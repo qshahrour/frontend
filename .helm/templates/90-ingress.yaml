@@ -23,6 +23,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: pyapi
+              name: ui
               port:
                 number: 5000
