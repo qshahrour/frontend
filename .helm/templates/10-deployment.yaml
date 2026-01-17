@@ -21,6 +21,10 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ .Chart.Name }}-nginx-config
       containers:
         - name: app
           imagePullPolicy: Always
@@ -29,6 +33,10 @@ spec:
             - containerPort: 80
               name: http
               protocol: TCP
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
           lifecycle:
             preStop:
               exec:
