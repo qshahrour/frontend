@@ -20,6 +20,8 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}
+      annotations:
+        checksum/values: {{ include (print $.Template.BasePath "/30-secret.yaml") . | sha256sum }}
     spec:
       volumes:
         - name: nginx-config
