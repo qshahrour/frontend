@@ -1,5 +1,5 @@
 {{- define "env" }}
-{{- range $name, $_ := .Values.app.env }}
+{{- range .Values.app.env }}
 - name: {{ $name }}
   valueFrom:
     secretKeyRef:
