@@ -11,7 +11,7 @@ app:
   env: dev
 
   env:
-    API_URL: http://pyapi.dev.svc.cluster.local
+    API_URL: http://a0d1a3fd22a0a48268fc0d6306d9203c-1816871747.eu-central-1.elb.amazonaws.com
 
 resources:
   app:
