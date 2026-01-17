@@ -1,11 +1,14 @@
 import Login from "./Login";
+import Dashboard from "./Dashboard";
 
 function App() {
-  return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Hello from Vite + React + Kubernetes!</h1>
-      <Login />
-    </div>
+  const [authenticated, setAuthenticated] = useState(
+    !!localStorage.getItem("token")
+  );
+  return authenticated ? (
+    <Dashboard />
+  ) : (
+    <Login onLogin={() => setAuthenticated(true)} />
   );
 }
 
