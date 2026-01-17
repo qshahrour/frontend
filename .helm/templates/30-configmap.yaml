@@ -60,7 +60,8 @@ data:
         root /var/www/html;
         
         location / {
-            try_files $uri$args $uri$args/ /index.html;
+            index index.html;
+            try_files $uri $uri/ /index.html;
         }
 
         location ~* "^\/_tech\/ngx-status$" {
