@@ -12,7 +12,7 @@ env:
   FRONTEND_REPO: frontend
   BUILDX_VERSION: ${{ github.sha }}
   BUILDX_IMAGE: frontend
-  IMAGE_TAG: ${{ github.sha }}
+  IMAGE_TAG: 'latest'
   ECR_REPOSITORY: frontend
   ECR_REGISTRY: '907244240513.dkr.ecr.eu-central-1.amazonaws.com'
 
@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
         id: qemu
@@ -50,6 +50,7 @@ jobs:
         uses: docker/metadata-action@v5
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: 'frontend'
         with:
           images: |
             images: $ECR_REGISTRY/$ECR_REPOSITORY,enable=true
@@ -65,48 +66,48 @@ jobs:
           push: true
           platforms: linux/amd64
           #tags: ${{ steps.meta.outputs.tags }}
-          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD_DATE=$(date +%s)
 
-  deployment:
-    runs-on: self-hosted
-    permissions:
-      id-token: write
-      contents: read
+  #deployment:
+  #  runs-on: self-hosted
+  #  permissions:
+  #    id-token: write
+   #   contents: read
+#
+ #   steps:
 
-    steps:
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/github-actions-role
-          role-session-name: rolesession
-
-      - name: 🔑 Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig \
-          --region ${{ env.AWS_REGION }} \
-          --name ${{ secrets.EKS_CLUSTER_NAME }}
-
-      - name: Helm dependency build
-        run: helm dependency build .helm/
-
-      - name: Helm lint
-        run: helm lint .helm/
-
-      - name: Deploy Helm chart
-        run: |
-          helm upgrade --install website .helm/ \
-          --namespace live \
-          --create-namespace \
-          --values .helm/values.yaml
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v3
+#        with:
+#          aws-region: ${{ env.AWS_REGION }}
+#          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/github-actions-role
+#          role-session-name: rolesession
+#
+#      - name: 🔑 Login to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v1
+#
+#      - name: Update kubeconfig
+#        run: |
+#          aws eks update-kubeconfig \
+#          --region ${{ env.AWS_REGION }} \
+#          --name ${{ secrets.EKS_CLUSTER_NAME }}
+#
+#      - name: Helm dependency build
+#        run: helm dependency build .helm/
+#
+#      - name: Helm lint
+#        run: helm lint .helm/
+#
+#      - name: Deploy Helm chart
+#        run: |
+#          helm upgrade --install website .helm/ \
+#          --namespace live \
+#          --create-namespace \
+#          --values .helm/values.yaml
