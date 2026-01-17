@@ -1,6 +1,9 @@
 {{- define "env" }}
-{{- range .Values.app.env }}
+{{- range $name, $_ := .Values.app.env }}
 - name: {{ .name }}
-  value: {{ .value | quote }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $.Chart.Name }}-env
+      key: {{ $name }}
 {{- end }}
 {{- end }}
