@@ -6,8 +6,7 @@ app:
     averageValue: 80
   ingressClass:
     _default: alb
-  url:
-    dev: qasem1.balouli.com
+  url: qasem1.balouli.com
   whitelist:
     _default:
       - "0.0.0.0/0"
