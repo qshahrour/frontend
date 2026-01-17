@@ -1,14 +1,9 @@
 app:
   hpa:
-    enabled:
-      _default: true
-    replicas:
-      min:
-        _default: 1
-      max:
-        _default: 3
-    averageValue: #cpu
-      _default: 80
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    averageValue: 80
   ingressClass:
     _default: alb
   url:
