@@ -50,3 +50,6 @@ function Login({ onLogin }) {
 }
 
 export default Login;
+
+console.log("API_URL =", API_URL);
+
