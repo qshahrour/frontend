@@ -9,7 +9,7 @@ app:
   whitelist: "0.0.0.0/0"
   image: 907244240513.dkr.ecr.eu-central-1.amazonaws.com/frontend:latest
   env: dev
-  API_URL: pyapi.dev.svc.cluster.local
+  api: pyapi.dev.svc.cluster.local
 
 resources:
   app:
