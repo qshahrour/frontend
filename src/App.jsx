@@ -1,7 +1,6 @@
-import React from "react";
 import Login from "./Login";
 
-export default function App() {
+function App() {
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>Hello from Vite + React + Kubernetes!</h1>
@@ -9,3 +8,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App;
