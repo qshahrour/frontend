@@ -8,7 +8,7 @@ function Login({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://a62d3c697e78d45f99240e5a0d9c1e92-1616225695.eu-central-1.elb.amazonaws.com/login", {
+    const res = await fetch("http://a62d3c697e78d45f99240e5a0d9c1e92-1616225695.eu-central-1.elb.amazonaws.com:5000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
