@@ -1,0 +1,89 @@
+<form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <h1>{{ 'auth.login.title' | translate }}</h1>
+
+  <div class="form-item">
+    @if (loginStore.errorMessage()) {
+      <mat-error class="auth-error">
+        {{ loginStore.errorMessage() }}
+      </mat-error>
+    }
+
+    <div class="form-field">
+      <label for="email-input">{{
+        'auth.common.email_label' | translate
+      }}</label>
+      <mat-form-field appearance="outline">
+        <input
+          id="email-input"
+          matInput
+          formControlName="email"
+          placeholder="{{ 'auth.login.email_placeholder' | translate }}"
+          type="email"
+        />
+        @if (loginForm.get('email')?.errors; as errors) {
+          <mat-error>
+            @if (errors['required']) {
+              {{ 'auth.common.email_required' | translate }}
+            } @else if (errors['invalidEmail']) {
+              {{ 'auth.common.email_invalid' | translate }}
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-field">
+      <label for="password-input">{{
+        'auth.login.password_label' | translate
+      }}</label>
+      <mat-form-field appearance="outline">
+        <input
+          id="password-input"
+          matInput
+          formControlName="password"
+          [type]="hidePassword ? 'password' : 'text'"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hidePassword = !hidePassword"
+          type="button"
+        >
+          <mat-icon>{{
+            hidePassword ? 'visibility_off' : 'visibility'
+          }}</mat-icon>
+        </button>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">{{
+          'auth.common.password_required' | translate
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-action">
+      <mat-checkbox formControlName="rememberMe">{{
+        'auth.login.remember_me' | translate
+      }}</mat-checkbox>
+      <a [routerLink]="['../forgot-password']">{{
+        'auth.login.forgot_password' | translate
+      }}</a>
+    </div>
+  </div>
+
+  <button
+    mat-flat-button
+    class="mat-secondary"
+    type="submit"
+    [disabled]="loginStore.isLoading()"
+  >
+    @if (loginStore.isLoading()) {
+      <mat-spinner diameter="30" />
+    } @else {
+      {{ 'auth.login.login_button' | translate }}
+    }
+  </button>
+
+  <div class="signup-prompt">
+    {{ 'auth.login.no_account' | translate }}
+    <a [href]="onboardingUrl">{{ 'auth.login.open_account' | translate }}</a>
+  </div>
+</form>
