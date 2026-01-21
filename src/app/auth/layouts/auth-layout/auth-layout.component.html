@@ -1,0 +1,16 @@
+<div class="auth-container">
+  <div
+    class="auth-content"
+    [ngClass]="{ 'mobile-layout': breakpointStore.isHandset() }"
+  >
+    <div class="auth-left flex-center">
+      <div class="auth-form">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+    <div class="auth-right flex-center">
+      <img src="./assets/images/cfi-logo.png" alt="CFI Logo" />
+    </div>
+  </div>
+</div>
