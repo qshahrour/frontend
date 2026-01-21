@@ -1,0 +1,13 @@
+@use 'auth-shared' as auth;
+
+.logout-container {
+  @include auth.auth-form;
+
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    @include auth.auth-form-mobile;
+  }
+}
