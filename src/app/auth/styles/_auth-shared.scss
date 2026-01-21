@@ -1,0 +1,60 @@
+@use '@angular/material' as mat;
+
+// Shared mixins for auth forms
+@mixin auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+
+  h1 {
+    color: var(--mat-heading-1-color);
+  }
+
+  p {
+    color: var(--mat-subtitle-color);
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .auth-error {
+    margin-bottom: 1rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    ::ng-deep .mat-mdc-form-field {
+      .mdc-text-field {
+        background-color: var(--mat-gray-90);
+      }
+    }
+  }
+
+  [mat-flat-button] {
+    @include mat.button-overrides(
+      (
+        container-height: 60px,
+      )
+    );
+  }
+}
+
+// Mixins for mobile auth forms
+@mixin auth-form-mobile {
+  h1,
+  p {
+    text-align: center;
+  }
+
+  h1 {
+    font-size: var(--mat-sys-label-large-size);
+    font-weight: 700;
+  }
+}
