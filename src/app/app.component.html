@@ -1,0 +1,10 @@
+<div class="card">
+  <h2>Users</h2>
+
+  <input [(ngModel)]="name" placeholder="Name" />
+  <button (click)="addUser()">Add</button>
+
+  <ul>
+    <li *ngFor="let u of users">{{ u.name }}</li>
+  </ul>
+</div>
